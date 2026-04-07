@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --coral: #FF6044;
+  --space-black: #121313;
+  --surface: #1C1C1C;
+  --border: #2A2A2A;
+  --text-primary: #F5F5F5;
+  --text-muted: #888888;
+  --success: #4CAF50;
+  --warning: #FFC107;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  background-color: #121313;
+  color: #F5F5F5;
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1C1C1C;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A2A2A;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6044;
+}
+
+.status-badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border cursor-pointer transition-all;
+}
+
+.card {
+  @apply bg-surface border border-border rounded-xl p-4;
+}
+
+.btn-primary {
+  @apply bg-coral hover:bg-coral/90 text-white font-medium px-4 py-2 rounded-lg transition-all text-sm;
+}
+
+.btn-ghost {
+  @apply text-text-muted hover:text-text-primary hover:bg-white/5 px-3 py-1.5 rounded-lg transition-all text-sm;
+}
+
+.input {
+  @apply bg-space-black border border-border rounded-lg px-3 py-2 text-text-primary text-sm focus:outline-none focus:border-coral/50 placeholder:text-text-muted w-full transition-colors;
+}
+
+.label {
+  @apply block text-xs font-medium text-text-muted mb-1;
+}
+
+.progress-bar {
+  @apply h-1.5 bg-border rounded-full overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full bg-coral rounded-full transition-all duration-500;
+}
