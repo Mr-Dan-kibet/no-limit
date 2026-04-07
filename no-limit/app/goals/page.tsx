@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Goal, GoalCategory, Year, GoalStatus } from '@/types'
+import { Goal, GoalCategory, Year, GoalStatus, GoalMilestone } from '@/types'
 import GoalCard from '@/components/GoalCard'
 import Modal from '@/components/Modal'
 import { getYearProgress } from '@/lib/utils'
@@ -33,12 +33,17 @@ export default function GoalsPage() {
   const [saving, setSaving] = useState(false)
 
   const loadData = useCallback(async (yearId: string) => {
-    const [{ data: catsData }, { data: goalsData }] = await Promise.all([
+    const [{ data: catsData }, { data: goalsData }, { data: milestonesData }] = await Promise.all([
       supabase.from('goal_categories').select('*').eq('year_id', yearId).order('sort_order'),
       supabase.from('goals').select('*').eq('year_id', yearId).order('sort_order'),
+      supabase.from('goal_milestones').select('*').order('sort_order'),
     ])
+    const goals = (goalsData ?? []).map((g: Goal) => ({
+      ...g,
+      goal_milestones: (milestonesData ?? []).filter((m: GoalMilestone) => m.goal_id === g.id),
+    }))
     setCategories(catsData ?? [])
-    setGoals(goalsData ?? [])
+    setGoals(goals)
     setLoading(false)
   }, [])
 

@@ -5,8 +5,9 @@ import { supabase } from '@/lib/supabase'
 import { Checklist, ChecklistCompletion, ChecklistFrequency } from '@/types'
 import ChecklistItem from '@/components/ChecklistItem'
 import Modal from '@/components/Modal'
-import { getChecklistPeriodStart, formatDate } from '@/lib/utils'
-import { parseISO, differenceInDays, subDays, format } from 'date-fns'
+import { getChecklistPeriodStart } from '@/lib/utils'
+import { parseISO, differenceInDays } from 'date-fns'
+import { Plus, ListTodo } from 'lucide-react'
 
 const TABS: { label: string; value: ChecklistFrequency }[] = [
   { label: 'Daily', value: 'daily' },
@@ -97,6 +98,16 @@ export default function ChecklistsPage() {
     }
   }
 
+  const handleEdit = async (checklistId: string, newTitle: string) => {
+    setChecklists((prev) => prev.map((c) => c.id === checklistId ? { ...c, title: newTitle } : c))
+    await supabase.from('checklists').update({ title: newTitle }).eq('id', checklistId)
+  }
+
+  const handleDelete = async (checklistId: string) => {
+    setChecklists((prev) => prev.filter((c) => c.id !== checklistId))
+    await supabase.from('checklists').delete().eq('id', checklistId)
+  }
+
   const handleAddItem = async () => {
     if (!newItem.title.trim()) return
     setSaving(true)
@@ -126,7 +137,9 @@ export default function ChecklistsPage() {
           <h1 className="font-heading text-2xl font-bold">Checklists</h1>
           <p className="text-text-muted text-sm mt-0.5">Daily habits & recurring reviews</p>
         </div>
-        <button onClick={() => setModal(true)} className="btn-primary">+ Add Item</button>
+        <button onClick={() => setModal(true)} className="btn-primary flex items-center gap-2">
+          <Plus size={15} /> Add Item
+        </button>
       </div>
 
       {/* Tabs */}
@@ -168,7 +181,7 @@ export default function ChecklistsPage() {
         </div>
       ) : tabItems.length === 0 ? (
         <div className="card text-center py-12">
-          <p className="text-text-muted text-2xl mb-3">✅</p>
+          <div className="flex justify-center mb-3"><ListTodo size={32} className="text-text-muted" strokeWidth={1.5} /></div>
           <p className="text-text-primary font-medium">No {tab} items yet</p>
           <p className="text-text-muted text-sm mt-1">Add your first {tab} checklist item</p>
           <button onClick={() => setModal(true)} className="btn-primary mt-4">Add Item</button>
@@ -182,6 +195,8 @@ export default function ChecklistsPage() {
               isCompleted={completedIds.has(item.id)}
               streak={tab === 'daily' ? getStreak(item.id, allCompletions) : undefined}
               onToggle={handleToggle}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           ))}
         </div>

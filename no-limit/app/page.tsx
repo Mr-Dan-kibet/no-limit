@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Goal, GoalCategory, Project, CalendarEvent, Checklist, ChecklistCompletion, Year } from '@/types'
-import { getGreeting, getYearProgress, formatDateShort, getStatusColor, getStatusLabel, getChecklistPeriodStart } from '@/lib/utils'
+import { getGreeting, getYearProgress, formatDateShort, getChecklistPeriodStart } from '@/lib/utils'
 import { addDays, parseISO, isWithinInterval } from 'date-fns'
 import Link from 'next/link'
+import { Target, CheckCircle2, Zap, Rocket, CalendarClock, Flame, BarChart3 } from 'lucide-react'
 
 export default function Dashboard() {
   const [goals, setGoals] = useState<Goal[]>([])
@@ -71,10 +72,10 @@ export default function Dashboard() {
   const yearProgress = year ? getYearProgress(year.start_date, year.end_date) : 0
 
   const statCards = [
-    { label: 'Total Goals', value: totalGoals, icon: '🎯', accent: false },
-    { label: 'Complete', value: completeGoals, icon: '✅', accent: false },
-    { label: 'In Progress', value: inProgressGoals, icon: '⚡', accent: true },
-    { label: 'Active Projects', value: activeProjects, icon: '🚀', accent: false },
+    { label: 'Total Goals',     value: totalGoals,      icon: Target,       accent: false },
+    { label: 'Complete',        value: completeGoals,   icon: CheckCircle2, accent: false },
+    { label: 'In Progress',     value: inProgressGoals, icon: Zap,          accent: true  },
+    { label: 'Active Projects', value: activeProjects,  icon: Rocket,       accent: false },
   ]
 
   if (loading) {
@@ -97,18 +98,21 @@ export default function Dashboard() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {statCards.map((card) => (
-          <div
-            key={card.label}
-            className={`card flex flex-col gap-2 ${card.accent ? 'border-coral/30 bg-coral/5' : ''}`}
-          >
-            <span className="text-2xl">{card.icon}</span>
-            <span className={`text-2xl font-heading font-bold ${card.accent ? 'text-coral' : 'text-text-primary'}`}>
-              {card.value}
-            </span>
-            <span className="text-xs text-text-muted">{card.label}</span>
-          </div>
-        ))}
+        {statCards.map((card) => {
+          const Icon = card.icon
+          return (
+            <div
+              key={card.label}
+              className={`card flex flex-col gap-2 ${card.accent ? 'border-coral/30 bg-coral/5' : ''}`}
+            >
+              <Icon size={20} className={card.accent ? 'text-coral' : 'text-text-muted'} strokeWidth={1.8} />
+              <span className={`text-2xl font-heading font-bold ${card.accent ? 'text-coral' : 'text-text-primary'}`}>
+                {card.value}
+              </span>
+              <span className="text-xs text-text-muted">{card.label}</span>
+            </div>
+          )
+        })}
       </div>
 
       {/* Year progress */}
@@ -131,7 +135,7 @@ export default function Dashboard() {
         {/* Upcoming this week */}
         <div className="card">
           <h2 className="font-heading font-semibold mb-3 flex items-center gap-2">
-            <span>📅</span> Upcoming this week
+            <CalendarClock size={16} className="text-coral" /> Upcoming this week
           </h2>
           {upcomingEvents.length === 0 ? (
             <p className="text-text-muted text-sm py-4 text-center">Nothing coming up this week</p>
@@ -154,7 +158,7 @@ export default function Dashboard() {
         {/* Focus today */}
         <div className="card">
           <h2 className="font-heading font-semibold mb-3 flex items-center gap-2">
-            <span>🔥</span> Focus today
+            <Flame size={16} className="text-coral" /> Focus today
           </h2>
           <div className="space-y-2">
             {todayGoals.map((goal) => (
@@ -191,7 +195,7 @@ export default function Dashboard() {
       {/* Goals by category overview */}
       <div className="card">
         <h2 className="font-heading font-semibold mb-4 flex items-center gap-2">
-          <span>🎯</span> Goals by Category
+          <BarChart3 size={16} className="text-coral" /> Goals by Category
         </h2>
         <div className="space-y-3">
           {categories.map((cat) => {

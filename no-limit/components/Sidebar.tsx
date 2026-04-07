@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { LayoutDashboard, Target, FolderKanban, CalendarDays, ListTodo } from 'lucide-react'
 
 const navLinks = [
-  { href: '/', label: 'Dashboard', icon: '⚡' },
-  { href: '/goals', label: 'Goals', icon: '🎯' },
-  { href: '/projects', label: 'Projects', icon: '🚀' },
-  { href: '/calendar', label: 'Calendar', icon: '📅' },
-  { href: '/checklists', label: 'Checklists', icon: '✅' },
+  { href: '/',            label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/goals',       label: 'Goals',     icon: Target },
+  { href: '/projects',    label: 'Projects',  icon: FolderKanban },
+  { href: '/calendar',    label: 'Calendar',  icon: CalendarDays },
+  { href: '/checklists',  label: 'Checklists',icon: ListTodo },
 ]
 
 export default function Sidebar() {
@@ -24,20 +25,20 @@ export default function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 p-3 space-y-1">
-        {navLinks.map((link) => {
-          const isActive = pathname === link.href
+        {navLinks.map(({ href, label, icon: Icon }) => {
+          const isActive = pathname === href
           return (
             <Link
-              key={link.href}
-              href={link.href}
+              key={href}
+              href={href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 isActive
                   ? 'bg-coral/10 text-coral border border-coral/20'
                   : 'text-text-muted hover:text-text-primary hover:bg-white/5'
               }`}
             >
-              <span className="text-base">{link.icon}</span>
-              {link.label}
+              <Icon size={17} strokeWidth={isActive ? 2.2 : 1.8} />
+              {label}
             </Link>
           )
         })}

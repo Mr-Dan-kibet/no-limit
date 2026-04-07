@@ -19,6 +19,16 @@ export interface GoalCategory {
 export type GoalStatus = 'not-started' | 'in-progress' | 'complete' | 'parked'
 export type GoalType = 'one-off' | 'recurring' | 'multi-step' | 'milestone' | 'conditional' | 'carry-over' | 'fresh' | 'measurable' | 'ongoing'
 
+export interface GoalMilestone {
+  id: string
+  goal_id: string
+  name: string
+  completed: boolean
+  completed_at: string | null
+  sort_order: number
+  created_at: string
+}
+
 export interface Goal {
   id: string
   category_id: string | null
@@ -32,6 +42,7 @@ export interface Goal {
   sort_order: number
   created_at: string
   goal_categories?: GoalCategory
+  goal_milestones?: GoalMilestone[]
 }
 
 export type ProjectStatus = 'not-started' | 'in-progress' | 'complete' | 'parked'
