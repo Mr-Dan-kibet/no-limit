@@ -194,7 +194,6 @@ export default function GoalsPage() {
                 {/* Category header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    {cat.icon && <span className="text-lg">{cat.icon}</span>}
                     <h2 className="font-heading font-semibold" style={{ color: cat.color ?? '#F5F5F5' }}>
                       {cat.name}
                     </h2>

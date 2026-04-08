@@ -206,7 +206,6 @@ export default function Dashboard() {
               <div key={cat.id}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-text-primary flex items-center gap-2">
-                    {cat.icon && <span>{cat.icon}</span>}
                     {cat.name}
                   </span>
                   <span className="text-xs text-text-muted">{catComplete}/{catGoals.length}</span>
