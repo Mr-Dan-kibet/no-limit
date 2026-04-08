@@ -1,6 +1,6 @@
 import {
   Briefcase, Code2, BookOpen, Dumbbell, Moon, Home, ClipboardList, Car,
-  LucideIcon, Tag,
+  LucideIcon, Tag, Coffee, Tv,
 } from 'lucide-react'
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -20,6 +20,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
   admin:      ClipboardList,
   travel:     Car,
   commute:    Car,
+  routine:    Coffee,
+  leisure:    Tv,
 }
 
 export function getCategoryIcon(name: string): LucideIcon {
