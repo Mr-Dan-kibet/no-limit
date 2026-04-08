@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Target, FolderKanban, CalendarDays, ListTodo } from 'lucide-react'
+import { LayoutDashboard, Target, FolderKanban, CalendarDays, ListTodo, BarChart2 } from 'lucide-react'
 
 const navLinks = [
   { href: '/',            label: 'Dashboard', icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/projects',    label: 'Projects',  icon: FolderKanban },
   { href: '/calendar',    label: 'Calendar',  icon: CalendarDays },
   { href: '/checklists',  label: 'Checklists',icon: ListTodo },
+  { href: '/analytics',   label: 'Analytics', icon: BarChart2 },
 ]
 
 export default function Sidebar() {
