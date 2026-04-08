@@ -106,3 +106,51 @@ export interface ChecklistCompletion {
   completed_date: string
   created_at: string
 }
+
+export interface TimeCategory {
+  id: string
+  name: string
+  color: string
+  icon: string | null
+  sort_order: number
+  active: boolean
+  created_at: string
+}
+
+export interface TimetableSlot {
+  id: string
+  label: string
+  category_id: string | null
+  start_time: string
+  end_time: string
+  days_of_week: number[]
+  sort_order: number
+  active: boolean
+  created_at: string
+  time_categories?: TimeCategory
+}
+
+export interface TimeBlock {
+  id: string
+  date: string
+  start_time: string
+  end_time: string
+  category_id: string | null
+  notes: string | null
+  created_at: string
+  entries?: TimeEntry[]
+  time_categories?: TimeCategory
+}
+
+export interface TimeEntry {
+  id: string
+  block_id: string
+  project_id: string | null
+  goal_id: string | null
+  duration_minutes: number
+  activity_type: string | null
+  notes: string | null
+  created_at: string
+  projects?: { id: string; name: string }
+  goals?: { id: string; name: string }
+}
