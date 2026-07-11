@@ -1,6 +1,7 @@
 'use client'
 
 import './globals.css'
+import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import BottomNav from '@/components/BottomNav'
 
@@ -9,6 +10,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+  const isAuthPage = pathname === '/login'
+
   return (
     <html lang="en">
       <head>
@@ -23,20 +27,26 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-space-black text-text-primary min-h-screen">
-        <div className="flex min-h-screen">
-          {/* Sidebar — desktop only */}
-          <Sidebar />
+        {isAuthPage ? (
+          children
+        ) : (
+          <>
+            <div className="flex min-h-screen">
+              {/* Sidebar — desktop only */}
+              <Sidebar />
 
-          {/* Main content */}
-          <main className="flex-1 md:ml-[220px] pb-20 md:pb-0 min-h-screen">
-            <div className="max-w-6xl mx-auto p-4 md:p-6">
-              {children}
+              {/* Main content */}
+              <main className="flex-1 md:ml-[220px] pb-20 md:pb-0 min-h-screen">
+                <div className="max-w-6xl mx-auto p-4 md:p-6">
+                  {children}
+                </div>
+              </main>
             </div>
-          </main>
-        </div>
 
-        {/* Bottom nav — mobile only */}
-        <BottomNav />
+            {/* Bottom nav — mobile only */}
+            <BottomNav />
+          </>
+        )}
       </body>
     </html>
   )

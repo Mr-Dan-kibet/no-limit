@@ -8,6 +8,7 @@ import { format, addDays, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMo
 import TimeBlockCard from '@/components/TimeBlockCard'
 import TimetableTimeline from '@/components/TimetableTimeline'
 import InsightsCharts from '@/components/InsightsCharts'
+import QuickLogBar from '@/components/QuickLogBar'
 
 type Tab = 'log' | 'timetable' | 'insights'
 type RangePreset = 'this-week' | 'last-week' | 'this-month' | 'last-month' | 'custom'
@@ -20,6 +21,10 @@ function blockDurationMinutes(start: string, end: string) {
   const [sh, sm] = start.split(':').map(Number)
   const [eh, em] = end.split(':').map(Number)
   return (eh * 60 + em) - (sh * 60 + sm)
+}
+
+function byStartTime(a: TimeBlock, b: TimeBlock) {
+  return a.start_time.localeCompare(b.start_time)
 }
 
 export default function AnalyticsPage() {
@@ -167,7 +172,7 @@ export default function AnalyticsPage() {
       .select('*, time_categories(*)')
 
     if (!error && data) {
-      setDayBlocks((prev) => [...prev, ...data.map((b: TimeBlock) => ({ ...b, entries: [] }))])
+      setDayBlocks((prev) => [...prev, ...data.map((b: TimeBlock) => ({ ...b, entries: [] }))].sort(byStartTime))
     }
   }
 
@@ -187,11 +192,15 @@ export default function AnalyticsPage() {
       .single()
 
     if (!error && data) {
-      setDayBlocks((prev) => [...prev, { ...data, entries: [] }])
+      setDayBlocks((prev) => [...prev, { ...data, entries: [] }].sort(byStartTime))
       setNewBlock({ start_time: '09:00', end_time: '10:00', category_id: '', notes: '' })
       setShowAddBlock(false)
     }
     setAddingSaving(false)
+  }
+
+  const handleQuickLogged = (block: TimeBlock) => {
+    setDayBlocks((prev) => [...prev, block].sort(byStartTime))
   }
 
   const handleBlockDeleted = (id: string) => setDayBlocks((prev) => prev.filter((b) => b.id !== id))
@@ -283,6 +292,17 @@ export default function AnalyticsPage() {
             </button>
           </div>
 
+          {/* Quick log — the common case: one line, one keystroke */}
+          <QuickLogBar
+            date={logDate}
+            categories={categories}
+            projects={projects}
+            goals={goals}
+            slots={slots}
+            blocks={dayBlocks}
+            onLogged={handleQuickLogged}
+          />
+
           {/* Daily summary pill */}
           {dayBlocks.length > 0 && (
             <div className="flex items-center gap-3 flex-wrap">
@@ -299,7 +319,10 @@ export default function AnalyticsPage() {
           <div className="space-y-2">
             {dayBlocks.length === 0 ? (
               <div className="card text-center py-10">
-                <p className="text-text-muted mb-3">No blocks for this day</p>
+                <p className="text-text-muted mb-1">Nothing logged for this day</p>
+                <p className="text-text-muted text-xs mb-4">
+                  Type what you did above, or start from your timetable
+                </p>
                 <div className="flex justify-center gap-3">
                   <button
                     onClick={seedFromTimetable}
@@ -309,9 +332,9 @@ export default function AnalyticsPage() {
                   </button>
                   <button
                     onClick={() => setShowAddBlock(true)}
-                    className="btn-primary text-sm"
+                    className="btn-ghost border border-border text-sm"
                   >
-                    Add block
+                    Add block manually
                   </button>
                 </div>
               </div>
@@ -336,6 +359,9 @@ export default function AnalyticsPage() {
           {showAddBlock ? (
             <div className="card space-y-3">
               <p className="text-sm font-medium text-text-primary">Add block</p>
+              <p className="text-xs text-text-muted -mt-2">
+                Creates an empty block to split across several activities.
+              </p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="label">Start</label>
@@ -389,9 +415,9 @@ export default function AnalyticsPage() {
             dayBlocks.length > 0 && (
               <button
                 onClick={() => setShowAddBlock(true)}
-                className="flex items-center gap-2 text-sm text-coral hover:underline"
+                className="flex items-center gap-2 text-sm text-text-muted hover:text-coral transition-colors"
               >
-                <Plus size={15} /> Add block
+                <Plus size={15} /> Add block manually
               </button>
             )
           )}
