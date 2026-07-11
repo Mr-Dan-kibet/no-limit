@@ -1,8 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Target, FolderKanban, CalendarDays, ListTodo, BarChart2 } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { LayoutDashboard, Target, FolderKanban, CalendarDays, ListTodo, BarChart2, LogOut } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 const navLinks = [
   { href: '/',            label: 'Dashboard', icon: LayoutDashboard },
@@ -15,6 +17,15 @@ const navLinks = [
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const [signingOut, setSigningOut] = useState(false)
+
+  const handleSignOut = async () => {
+    setSigningOut(true)
+    await supabase.auth.signOut()
+    router.replace('/login')
+    router.refresh()
+  }
 
   return (
     <aside className="hidden md:flex flex-col fixed left-0 top-0 h-full w-[220px] bg-surface border-r border-border z-50">
@@ -46,8 +57,16 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-border">
-        <p className="text-text-muted text-xs">April 2026 – March 2027</p>
+      <div className="p-3 border-t border-border space-y-2">
+        <button
+          onClick={handleSignOut}
+          disabled={signingOut}
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-text-primary hover:bg-white/5 transition-all disabled:opacity-60"
+        >
+          <LogOut size={17} strokeWidth={1.8} />
+          {signingOut ? 'Signing out...' : 'Sign out'}
+        </button>
+        <p className="text-text-muted text-xs px-3">April 2026 – March 2027</p>
       </div>
     </aside>
   )
